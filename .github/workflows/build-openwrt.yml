@@ -26,8 +26,8 @@ env:
   SUBTARGET: mt7621
   RELEASE_VERSION: 24.10.0
   TOOLCHAIN: gcc-13.3.0_musl
-  PACKAGE: luci-app-campus-network-login
-  PACKAGE_IPK: campus-network-login
+  PACKAGE: luci-theme-argon
+  PACKAGE_IPK: argon
   IPK_ALL: false
   DIY_P_SH: workflows/diy-part.sh
   UPLOAD_RELEASE: true
