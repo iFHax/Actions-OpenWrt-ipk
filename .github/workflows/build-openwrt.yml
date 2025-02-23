@@ -28,8 +28,7 @@ env:
   TOOLCHAIN: gcc-13.3.0_musl
   PACKAGE: luci-app-campus-network-login
   PACKAGE_IPK: campus-network-login
-  IPK_DIR: bin/packages/*/base/
-  GITHUB_REPOSITORY: https://github.com/YL2209/luci-app-campus-network-login.git
+  IPK_ALL: false
   DIY_P_SH: workflows/diy-part.sh
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
@@ -79,7 +78,6 @@ jobs:
       run: |
         pwd
         cd sdk
-        git clone ${{ env.GITHUB_REPOSITORY }} package/${{ env.PACKAGE }}
         ./scripts/feeds update -a && ./scripts/feeds install -a
 
     - name: 配置.config
@@ -104,8 +102,22 @@ jobs:
         echo -e "make package/${{ env.PACKAGE }}/{clean,compile} -j$(nproc)"
         make package/${{ env.PACKAGE }}/{clean,compile} -j$(nproc)
         echo "status=success" >> $GITHUB_OUTPUT
-        cd ${{ env.IPK_DIR }}
+        mkdir bin/ipk
+        mv bin/packages/*/base/* bin/ipk/
+        mv bin/packages/*/luci/* bin/ipk/
+        mv bin/packages/*/packages/* bin/ipk/
+        mv bin/targets/*/*/packages/* bin/ipk/
+        cd bin/ipk
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+
+    - name: Determine files to upload
+      id: determine-files
+      run: |
+        if [ -n "${{ env.IPK_ALL }}" ]; then
+          echo "upload_files=${{ env.FIRMWARE }}/*" >> $GITHUB_OUTPUT
+        else
+          echo "upload_files=${{ env.FIRMWARE }}/*${{ env.PACKAGE_IPK }}*.ipk" >> $GITHUB_OUTPUT
+        fi
 
     - name: Check space usage
       if: (!cancelled())
@@ -128,8 +140,8 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
-        files: ${{ env.FIRMWARE }}/*${{ env.PACKAGE_IPK }}*.ipk
-
+        files: ${{ steps.determine-files.outputs.upload_files }}
+          
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
       with:
