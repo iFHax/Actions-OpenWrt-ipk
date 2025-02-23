@@ -106,7 +106,7 @@ jobs:
       id: determine-files
       run: |
         cd sdk
-        if [ -n "${{ env.IPK_ALL }}" ]; then
+        if [ "${{ env.IPK_ALL }}" ]; then
           tar -zcvf ipk_all.tar.gz bin
           echo "$PWD"
           echo "FIRMWARE=$PWD/ipk_all.tar.gz" >> $GITHUB_ENV
