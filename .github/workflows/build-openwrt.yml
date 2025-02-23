@@ -109,17 +109,16 @@ jobs:
         if [ -n "${{ env.IPK_ALL }}" ]; then
           tar -zcvf ipk_all.tar.gz bin
           cd bin
-          echo "FIRMWARE=$PWD" >> $GITHUB_ENV          
-          echo "upload_files=${{ env.FIRMWARE }}/ipk_all.tar.gz" >> $GITHUB_OUTPUT
+          PWD       
+          echo "FIRMWARE=$PWD/ipk_all.tar.gz" >> $GITHUB_ENV
         else
           mkdir bin/ipk
-          mv bin/packages/*/base/* bin/ipk/
-          mv bin/packages/*/luci/* bin/ipk/
-          mv bin/packages/*/packages/* bin/ipk/
-          mv bin/targets/*/*/packages/* bin/ipk/
-          cd bin/ipk/
-          echo "FIRMWARE=$PWD" >> $GITHUB_ENV     
-          echo "upload_files=${{ env.FIRMWARE }}/*${{ env.PACKAGE_IPK }}*.ipk" >> $GITHUB_OUTPUT
+          mv bin/packages/*/base/* bin/ipk
+          mv bin/packages/*/luci/* bin/ipk
+          mv bin/packages/*/packages/* bin/ipk
+          mv bin/targets/*/*/packages/* bin/ipk
+          cd bin/ipk
+          echo "FIRMWARE=$PWD/*${{ env.PACKAGE_IPK }}*.ipk" >> $GITHUB_ENV
         fi
 
     - name: Check space usage
@@ -143,7 +142,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
-        files: ${{ steps.determine-files.outputs.upload_files }}
+        files: ${{ env.FIRMWARE }}
           
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
