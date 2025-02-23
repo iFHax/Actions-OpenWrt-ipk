@@ -28,7 +28,7 @@ env:
   TOOLCHAIN: gcc-13.3.0_musl
   PACKAGE: luci-app-campus-network-login
   PACKAGE_IPK: campus-network-login
-  IPK_ALL: true
+  IPK_ALL: false
   DIY_P_SH: workflows/diy-part.sh
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
@@ -120,6 +120,7 @@ jobs:
           cd bin/ipk
           echo "FIRMWARE=$PWD/*${{ env.PACKAGE_IPK }}*.ipk" >> $GITHUB_ENV
         fi
+        echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Check space usage
       if: (!cancelled())
