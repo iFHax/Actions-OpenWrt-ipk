@@ -106,17 +106,16 @@ jobs:
       id: determine-files
       run: |
         cd sdk
-        mkdir bin/ipk
-        mv bin/packages/*/base/* bin/ipk/
-        mv bin/packages/*/luci/* bin/ipk/
-        mv bin/packages/*/packages/* bin/ipk/
-        mv bin/targets/*/*/packages/* bin/ipk/
         if [ -n "${{ env.IPK_ALL }}" ]; then
-          tar -zcvf bin/ipk/ipk_all.tar.gz bin/ipk
-          cd bin/ipk
+          tar -zcvf ipk_all.tar.gz bin
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV          
           echo "upload_files=${{ env.FIRMWARE }}/ipk_all.tar.gz" >> $GITHUB_OUTPUT
         else
+          mkdir bin/ipk
+          mv bin/packages/*/base/* bin/ipk/
+          mv bin/packages/*/luci/* bin/ipk/
+          mv bin/packages/*/packages/* bin/ipk/
+          mv bin/targets/*/*/packages/* bin/ipk/
           cd bin/ipk
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV     
           echo "upload_files=${{ env.FIRMWARE }}/*${{ env.PACKAGE_IPK }}*.ipk" >> $GITHUB_OUTPUT
