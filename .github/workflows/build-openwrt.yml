@@ -103,7 +103,7 @@ jobs:
         echo -e "make package/${{ env.PACKAGE }}/{clean,compile} -j$(nproc)"
         make package/${{ env.PACKAGE }}/{clean,compile} -j$(nproc)
         echo "status=success" >> $GITHUB_OUTPUT
-        cd bin/packages/*/base/
+        cd bin/packages/*/*/
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
 
     - name: Check space usage
