@@ -28,7 +28,7 @@ env:
   TOOLCHAIN: gcc-13.3.0_musl
   PACKAGE: luci-app-campus-network-login
   PACKAGE_IPK: campus-network-login
-  IPK_ALL: false
+  IPK_ALL: true
   DIY_P_SH: workflows/diy-part.sh
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
@@ -109,7 +109,7 @@ jobs:
         if [ -n "${{ env.IPK_ALL }}" ]; then
           tar -zcvf ipk_all.tar.gz bin
           cd bin
-          PWD       
+          echo "$PWD"
           echo "FIRMWARE=$PWD/ipk_all.tar.gz" >> $GITHUB_ENV
         else
           mkdir bin/ipk
@@ -118,6 +118,7 @@ jobs:
           mv bin/packages/*/packages/* bin/ipk
           mv bin/targets/*/*/packages/* bin/ipk
           cd bin/ipk
+          echo "$PWD"
           echo "FIRMWARE=$PWD/*${{ env.PACKAGE_IPK }}*.ipk" >> $GITHUB_ENV
         fi
         echo "status=success" >> $GITHUB_OUTPUT
