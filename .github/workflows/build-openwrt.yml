@@ -28,7 +28,7 @@ env:
   TOOLCHAIN: gcc-13.3.0_musl
   PACKAGE: luci-app-campus-network-login
   PACKAGE_IPK: campus-network-login
-  IPK_ALL: false
+  IPK_ALL: true
   DIY_P_SH: workflows/diy-part.sh
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
@@ -76,7 +76,6 @@ jobs:
 
     - name: 更新&&下载 feeds
       run: |
-        pwd
         cd sdk
         ./scripts/feeds update -a && ./scripts/feeds install -a
 
@@ -102,20 +101,24 @@ jobs:
         echo -e "make package/${{ env.PACKAGE }}/{clean,compile} -j$(nproc)"
         make package/${{ env.PACKAGE }}/{clean,compile} -j$(nproc)
         echo "status=success" >> $GITHUB_OUTPUT
+
+    - name: Determine files to upload
+      id: determine-files
+      run: |
+        cd sdk
         mkdir bin/ipk
         mv bin/packages/*/base/* bin/ipk/
         mv bin/packages/*/luci/* bin/ipk/
         mv bin/packages/*/packages/* bin/ipk/
         mv bin/targets/*/*/packages/* bin/ipk/
-        cd bin/ipk
-        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-
-    - name: Determine files to upload
-      id: determine-files
-      run: |
         if [ -n "${{ env.IPK_ALL }}" ]; then
-          echo "upload_files=${{ env.FIRMWARE }}/*" >> $GITHUB_OUTPUT
+          tar -zcvf bin/ipk/ipk_all.tar.gz bin/ipk
+          cd bin/ipk
+          echo "FIRMWARE=$PWD" >> $GITHUB_ENV          
+          echo "upload_files=${{ env.FIRMWARE }}/ipk_all.tar.gz" >> $GITHUB_OUTPUT
         else
+          cd bin/ipk
+          echo "FIRMWARE=$PWD" >> $GITHUB_ENV     
           echo "upload_files=${{ env.FIRMWARE }}/*${{ env.PACKAGE_IPK }}*.ipk" >> $GITHUB_OUTPUT
         fi
 
