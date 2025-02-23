@@ -28,6 +28,7 @@ env:
   TOOLCHAIN: gcc-13.3.0_musl
   PACKAGE: luci-app-campus-network-login
   PACKAGE_IPK: campus-network-login
+  IPK_DIR: bin/packages/*/base/
   GITHUB_REPOSITORY: https://github.com/YL2209/luci-app-campus-network-login.git
   DIY_P_SH: workflows/diy-part.sh
   UPLOAD_RELEASE: true
@@ -103,7 +104,7 @@ jobs:
         echo -e "make package/${{ env.PACKAGE }}/{clean,compile} -j$(nproc)"
         make package/${{ env.PACKAGE }}/{clean,compile} -j$(nproc)
         echo "status=success" >> $GITHUB_OUTPUT
-        cd bin/packages/*/*/
+        cd ${{ env.IPK_DIR }}
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
 
     - name: Check space usage
