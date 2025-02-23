@@ -10,7 +10,7 @@
 # See /LICENSE for more information.
 #
 
-name: OpenWrt-SDK luci-app-campus-network-login-mt7621
+name: OpenWrt-SDK
 
 on:
   repository_dispatch:
@@ -28,7 +28,7 @@ env:
   TOOLCHAIN: gcc-13.3.0_musl
   PACKAGE: luci-app-campus-network-login
   PACKAGE_IPK: campus-network-login
-  IPK_ALL: true
+  IPK_ALL: false
   DIY_P_SH: workflows/diy-part.sh
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
@@ -108,6 +108,7 @@ jobs:
         cd sdk
         if [ -n "${{ env.IPK_ALL }}" ]; then
           tar -zcvf ipk_all.tar.gz bin
+          cd bin
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV          
           echo "upload_files=${{ env.FIRMWARE }}/ipk_all.tar.gz" >> $GITHUB_OUTPUT
         else
@@ -116,7 +117,7 @@ jobs:
           mv bin/packages/*/luci/* bin/ipk/
           mv bin/packages/*/packages/* bin/ipk/
           mv bin/targets/*/*/packages/* bin/ipk/
-          cd bin/ipk
+          cd bin/ipk/
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV     
           echo "upload_files=${{ env.FIRMWARE }}/*${{ env.PACKAGE_IPK }}*.ipk" >> $GITHUB_OUTPUT
         fi
