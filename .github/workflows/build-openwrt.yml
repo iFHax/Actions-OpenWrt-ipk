@@ -27,7 +27,7 @@ env:
   RELEASE_VERSION: 24.10.0
   TOOLCHAIN: gcc-13.3.0_musl
   PACKAGE: luci-app-campus-network-login
-  PACKAGE2: campus-network-login
+  PACKAGE_IPK: campus-network-login
   GITHUB_REPOSITORY: https://github.com/YL2209/luci-app-campus-network-login.git
   DIY_P_SH: workflows/diy-part.sh
   UPLOAD_RELEASE: true
@@ -127,7 +127,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
-        files: ${{ env.FIRMWARE }}/*${{ env.PACKAGE2 }}*.ipk
+        files: ${{ env.FIRMWARE }}/*${{ env.PACKAGE_IPK }}*.ipk
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
