@@ -26,9 +26,9 @@ env:
   SUBTARGET: mt7621
   RELEASE_VERSION: 24.10.0
   TOOLCHAIN: gcc-13.3.0_musl
-  PACKAGE: luci-theme-argon
-  PACKAGE_IPK: argon
-  IPK_ALL: false
+  PACKAGE: luci-theme-alpha
+  PACKAGE_IPK: alpha
+  IPK_ALL: true
   DIY_P_SH: workflows/diy-part.sh
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
