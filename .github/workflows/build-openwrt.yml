@@ -118,7 +118,7 @@ jobs:
           mv bin/targets/*/*/packages/* bin/ipk
           cd bin/ipk
           echo "$PWD"
-          echo "FIRMWARE=$PWD/*${{ env.PACKAGE_IPK }}*.ipk" >> $GITHUB_ENV
+          echo "FIRMWARE=$PWD/*${{ env.PACKAGE_IPK }}*" >> $GITHUB_ENV
         fi
         echo "status=success" >> $GITHUB_OUTPUT
 
