@@ -1,14 +1,4 @@
-#
-# https://github.com/P3TERX/Actions-OpenWrt
-#
-# File: .github/workflows/openwrt-bulder.yml
-# Description: Build OpenWrt using GitHub Actions
-#
-# Copyright (c) 2019-2024 P3TERX <https://p3terx.com>
-#
-# This is free software, licensed under the MIT License.
-# See /LICENSE for more information.
-#
+change to target CONFIG_TARGET_qualcommax_ipq807x_DEVICE_arcadyan_aw1000=y
 
 name: OpenWrt-SDK
 
@@ -22,16 +12,16 @@ on:
 
 env:
   BASE_URL: https://downloads.openwrt.org/releases
-  TARGET_SYATEM: ramips
-  SUBTARGET: mt7621
+  TARGET_SYATEM: qualcommax
+  SUBTARGET: ipq807x
   RELEASE_VERSION: 24.10.0
   TOOLCHAIN: gcc-13.3.0_musl
-  PACKAGE: luci-app-campus-network-login
-  PACKAGE_IPK: campus
+  PACKAGE: luci-app-ttl
+  PACKAGE_IPK: luci-app-ttl
   IPK_ALL: false
   DIY_P_SH: workflows/diy-part.sh
   UPLOAD_RELEASE: true
-  TZ: Asia/Shanghai
+  TZ: Asia/Kuala_Lumpur
 
 jobs:
   build:
