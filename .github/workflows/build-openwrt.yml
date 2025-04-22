@@ -1,5 +1,3 @@
-change to target CONFIG_TARGET_qualcommax_ipq807x_DEVICE_arcadyan_aw1000=y
-
 name: OpenWrt-SDK
 
 on:
@@ -12,7 +10,7 @@ on:
 
 env:
   BASE_URL: https://downloads.openwrt.org/releases
-  TARGET_SYATEM: qualcommax
+  TARGET_SYSTEM: qualcommax
   SUBTARGET: ipq807x
   RELEASE_VERSION: 24.10.0
   TOOLCHAIN: gcc-13.3.0_musl
