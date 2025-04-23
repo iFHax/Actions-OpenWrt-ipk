@@ -9,8 +9,8 @@ on:
       - '.github/workflows/build-openwrt.yml'
 
 env:
-  BASE_URL: https://downloads.openwrt.org/releases
-  TARGET_SYSTEM: qualcommax
+  BASE_URL: https://downloads.immortalwrt.org/releases
+  TARGET_SYSTEM: ipq807x
   SUBTARGET: ipq807x
   RELEASE_VERSION: 24.10.0
   TOOLCHAIN: gcc-13.3.0_musl
