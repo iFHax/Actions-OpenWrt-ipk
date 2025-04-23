@@ -10,7 +10,7 @@ on:
 
 env:
   BASE_URL: https://downloads.immortalwrt.org/releases
-  TARGET_SYSTEM: ipq807x
+  TARGET_SYSTEM: qualcommax
   SUBTARGET: ipq807x
   RELEASE_VERSION: 24.10.0
   TOOLCHAIN: gcc-13.3.0_musl
