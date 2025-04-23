@@ -27,7 +27,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@main
+      uses: actions/checkout@v3
 
     - name: Initialization environment
       env:
@@ -43,23 +43,16 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
-    - name: 下载 Openwrt SDK
+    - name: 下载 ImmortalWRT SDK
       working-directory: /workdir
       run: |
         df -hT $PWD
-        if [ "$RELEASE_VERSION" == "24.10.0" ]; then
-          EXTENSION="tar.zst"
-        else
-          EXTENSION="tar.xz"
-        fi
-        SDK_NAME="openwrt-sdk-${{ env.RELEASE_VERSION }}-${{ env.TARGET_SYATEM }}-${{ env.SUBTARGET }}_${{ env.TOOLCHAIN }}.Linux-x86_64.${EXTENSION}"
-        FULL_URL="${{ env.BASE_URL }}/${{ env.RELEASE_VERSION }}/targets/${{ env.TARGET_SYATEM }}/${{ env.SUBTARGET }}/${SDK_NAME}"
+        EXTENSION="tar.zst"
+        SDK_NAME="immortalwrt-sdk-${RELEASE_VERSION}-${TARGET_SYSTEM}-${SUBTARGET}_${TOOLCHAIN}.Linux-x86_64.${EXTENSION}"
+        FULL_URL="${BASE_URL}/${RELEASE_VERSION}/targets/${TARGET_SYSTEM}/${SUBTARGET}/${SDK_NAME}"
+        echo "Downloading SDK: $FULL_URL"
         wget $FULL_URL
-        if [ "${{ env.RELEASE_VERSION }}" == "24.10.0" ]; then
-          mkdir sdk && tar --zstd -xvf $SDK_NAME -C ./sdk --strip-components=1
-        else
-          mkdir sdk && tar -xvf $SDK_NAME -C ./sdk --strip-components=1
-        fi
+        mkdir sdk && tar --zstd -xvf $SDK_NAME -C ./sdk --strip-components=1
         ln -sf /workdir/sdk $GITHUB_WORKSPACE/sdk
 
     - name: 更新&&下载 feeds
@@ -132,13 +125,12 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "release_tag=$(date +"%Y.%m.%d-%H%M")-${{ env.TARGET_SYATEM }}-${{ env.SUBTARGET }}-openwrt${{ env.RELEASE_VERSION }}" >> $GITHUB_OUTPUT
+        echo "release_tag=$(date +"%Y.%m.%d-%H%M")-${{ env.TARGET_SYSTEM }}-${{ env.SUBTARGET }}-immortalwrt${{ env.RELEASE_VERSION }}" >> $GITHUB_OUTPUT
         touch release.txt
-        [ ${UPLOAD_GOFILE} = true && ${{ steps.gofile.outputs.url }} ] && echo "🔗 [GoFile](${{ steps.gofile.outputs.url }})" >> release.txt
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Upload firmware to release
-      uses: softprops/action-gh-release@master
+      uses: softprops/action-gh-release@v1
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -146,15 +138,15 @@ jobs:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}
-          
+
     - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@main
+      uses: Mattraks/delete-workflow-runs@v2
       with:
         retain_days: 0
         keep_minimum_runs: 2
 
     - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@master
+      uses: dev-drprasad/delete-older-releases@v0.2.0
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         keep_latest: 5
